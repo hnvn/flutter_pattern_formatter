@@ -15,7 +15,7 @@ import 'package:pattern_formatter/pattern_formatter.dart';
 * Integer number:
 
 <p>
-    <img src="https://github.com/hnvn/flutter_pattern_formatter/blob/master/screenshots/integer_formatter.gif?raw=true"/>
+    <img width="512" src="https://github.com/hnvn/flutter_pattern_formatter/blob/master/screenshots/integer_formatter.gif?raw=true"/>
 </p>
 
 ```dart
@@ -30,7 +30,7 @@ TextField(
 * Decimal number:
 
 <p>
-    <img src="https://github.com/hnvn/flutter_pattern_formatter/blob/master/screenshots/decimal_formatter.gif?raw=true"/>
+    <img width="512" src="https://github.com/hnvn/flutter_pattern_formatter/blob/master/screenshots/decimal_formatter.gif?raw=true"/>
 </p>
 
 ```dart
@@ -45,7 +45,7 @@ TextField(
 ### Card number grouping
 
 <p>
-    <img src="https://github.com/hnvn/flutter_pattern_formatter/blob/master/screenshots/card_number_formatter.gif?raw=true"/>
+    <img width="512" src="https://github.com/hnvn/flutter_pattern_formatter/blob/master/screenshots/card_number_formatter.gif?raw=true"/>
 </p>
 
 ```dart
@@ -60,7 +60,7 @@ TextField(
 ### Date format
 
 <p>
-    <img src="https://github.com/hnvn/flutter_pattern_formatter/blob/master/screenshots/date_formatter.gif?raw=true"/>
+    <img width="512" src="https://github.com/hnvn/flutter_pattern_formatter/blob/master/screenshots/date_formatter.gif?raw=true"/>
 </p>
 
 ```dart
