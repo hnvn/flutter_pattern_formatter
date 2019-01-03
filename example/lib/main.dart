@@ -81,7 +81,7 @@ class MyHomePage extends StatelessWidget {
                   decoration: InputDecoration(
                       border: OutlineInputBorder(),
                       isDense: true,
-                      labelText: 'dd/MM/yyyy'),
+                      hintText: 'dd/MM/yyyy'),
                   keyboardType: TextInputType.number,
                   inputFormatters: [
                     DateInputFormatter(),
