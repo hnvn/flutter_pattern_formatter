@@ -14,12 +14,16 @@ class ThousandsFormatter extends NumberInputFormatter {
 
   final WhitelistingTextInputFormatter _decimalFormatter;
   final String _decimalSeparator;
+  final RegExp _decimalRegex;
 
   final NumberFormat formatter;
   final bool allowFraction;
 
   ThousandsFormatter({this.formatter, this.allowFraction = false})
       : _decimalSeparator = (formatter ?? _formatter).symbols.DECIMAL_SEP,
+        _decimalRegex = RegExp(allowFraction
+            ? '[0-9]+([${(formatter ?? _formatter).symbols.DECIMAL_SEP}])?'
+            : r'\d+'),
         _decimalFormatter = WhitelistingTextInputFormatter(RegExp(allowFraction
             ? '[0-9]+([${(formatter ?? _formatter).symbols.DECIMAL_SEP}])?'
             : r'\d+'));
@@ -38,13 +42,15 @@ class ThousandsFormatter extends NumberInputFormatter {
   }
 
   @override
-  TextEditingValue _formatNumber(
+  TextEditingValue _formatValue(
       TextEditingValue oldValue, TextEditingValue newValue) {
     return _decimalFormatter.formatEditUpdate(oldValue, newValue);
   }
 
   @override
-  bool _isSeparator(String s) => allowFraction && _decimalSeparator == s;
+  bool _isUserInput(String s) {
+    return s == _decimalSeparator || _decimalRegex.firstMatch(s) != null;
+  }
 }
 
 ///
@@ -53,8 +59,9 @@ class ThousandsFormatter extends NumberInputFormatter {
 /// `12345678` should be formatted to `1234 5678`.
 ///
 class CreditCardFormatter extends NumberInputFormatter {
+  static final RegExp _digitOnlyRegex = RegExp(r'\d+');
   static final WhitelistingTextInputFormatter _digitOnlyFormatter =
-      WhitelistingTextInputFormatter(RegExp(r'\d+'));
+      WhitelistingTextInputFormatter(_digitOnlyRegex);
 
   final String separator;
 
@@ -77,13 +84,15 @@ class CreditCardFormatter extends NumberInputFormatter {
   }
 
   @override
-  TextEditingValue _formatNumber(
+  TextEditingValue _formatValue(
       TextEditingValue oldValue, TextEditingValue newValue) {
     return _digitOnlyFormatter.formatEditUpdate(oldValue, newValue);
   }
 
   @override
-  bool _isSeparator(String s) => false;
+  bool _isUserInput(String s) {
+    return _digitOnlyRegex.firstMatch(s) != null;
+  }
 }
 
 ///
@@ -101,7 +110,7 @@ abstract class NumberInputFormatter extends TextInputFormatter {
     }
 
     /// remove all invalid characters
-    newValue = _formatNumber(oldValue, newValue);
+    newValue = _formatValue(oldValue, newValue);
 
     /// current selection
     int selectionIndex = newValue.selection.end;
@@ -117,7 +126,7 @@ abstract class NumberInputFormatter extends TextInputFormatter {
     int inputCount = 0;
     for (int i = 0; i < newText.length && inputCount < selectionIndex; i++) {
       final character = newText[i];
-      if (_isNumeric(character) || _isSeparator(character)) {
+      if (_isUserInput(character)) {
         inputCount++;
       } else {
         insertCount++;
@@ -134,8 +143,7 @@ abstract class NumberInputFormatter extends TextInputFormatter {
     /// characters when cursor stands right after inserted characters
     if (selectionIndex - 1 >= 0 &&
         selectionIndex - 1 < newText.length &&
-        !_isNumeric(newText[selectionIndex - 1]) &&
-        !_isSeparator(newText[selectionIndex - 1])) {
+        !_isUserInput(newText[selectionIndex - 1])) {
       selectionIndex--;
     }
     return TextEditingValue(
@@ -143,17 +151,13 @@ abstract class NumberInputFormatter extends TextInputFormatter {
         selection: TextSelection.collapsed(offset: selectionIndex));
   }
 
-  bool _isNumeric(String s) {
-    if (s == null) {
-      return false;
-    }
-    return int.tryParse(s) != null;
-  }
+  /// check character from user input or being inserted by pattern formatter
+  bool _isUserInput(String s);
 
-  bool _isSeparator(String s);
-
+  /// format user input with pattern formatter
   String _formatPattern(String digits);
 
-  TextEditingValue _formatNumber(
+  /// validate user input
+  TextEditingValue _formatValue(
       TextEditingValue oldValue, TextEditingValue newValue);
 }

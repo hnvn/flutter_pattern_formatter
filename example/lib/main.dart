@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:pattern_formatter/pattern_formatter.dart';
 
 void main() => runApp(MyApp());
@@ -24,52 +25,73 @@ class MyHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(title),
-      ),
-      body: Column(
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
-            child: TextField(
-              decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  isDense: true,
-                  labelText: 'Integer Number'),
-              keyboardType: TextInputType.number,
-              inputFormatters: [ThousandsFormatter()],
-              style: TextStyle(fontSize: 16.0, color: Colors.black),
-            ),
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).requestFocus(FocusNode());
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(title),
+        ),
+        body: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
+                child: TextField(
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      isDense: true,
+                      labelText: 'Integer Number'),
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [ThousandsFormatter()],
+                  style: TextStyle(fontSize: 16.0, color: Colors.black),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
+                child: TextField(
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      isDense: true,
+                      labelText: 'Decimal Number'),
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [ThousandsFormatter(allowFraction: true)],
+                  style: TextStyle(fontSize: 16.0, color: Colors.black),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
+                child: TextField(
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      isDense: true,
+                      labelText: 'Card Number'),
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [
+                    CreditCardFormatter(),
+                  ],
+                  style: TextStyle(fontSize: 16.0, color: Colors.black),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
+                child: TextField(
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      isDense: true,
+                      labelText: 'dd/MM/yyyy'),
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [
+                    DateInputFormatter(),
+                  ],
+                  style: TextStyle(fontSize: 16.0, color: Colors.black),
+                ),
+              )
+            ],
           ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
-            child: TextField(
-              decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  isDense: true,
-                  labelText: 'Decimal Number'),
-              keyboardType: TextInputType.number,
-              inputFormatters: [ThousandsFormatter(allowFraction: true)],
-              style: TextStyle(fontSize: 16.0, color: Colors.black),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
-            child: TextField(
-              decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  isDense: true,
-                  labelText: 'Card Number'),
-              keyboardType: TextInputType.number,
-              inputFormatters: [
-                CreditCardFormatter(),
-              ],
-              style: TextStyle(fontSize: 16.0, color: Colors.black),
-            ),
-          )
-        ],
+        ),
       ),
     );
   }
