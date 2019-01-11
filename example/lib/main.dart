@@ -91,6 +91,7 @@ class MyHomePage extends StatelessWidget {
                       hintText: 'dd/MM/yyyy'),
                   keyboardType: TextInputType.number,
                   inputFormatters: [
+                    WhitelistingTextInputFormatter(RegExp(r'\d+|-|/')),
                     DateInputFormatter(),
                   ],
                   style: TextStyle(fontSize: 16.0, color: Colors.black),
