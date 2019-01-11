@@ -45,7 +45,10 @@ class MyHomePage extends StatelessWidget {
                       isDense: true,
                       labelText: 'Integer Number'),
                   keyboardType: TextInputType.number,
-                  inputFormatters: [ThousandsFormatter()],
+                  inputFormatters: [
+                    ThousandsFormatter(),
+                    LengthLimitingTextInputFormatter(16)
+                  ],
                   style: TextStyle(fontSize: 16.0, color: Colors.black),
                 ),
               ),
@@ -57,7 +60,10 @@ class MyHomePage extends StatelessWidget {
                       isDense: true,
                       labelText: 'Decimal Number'),
                   keyboardType: TextInputType.number,
-                  inputFormatters: [ThousandsFormatter(allowFraction: true)],
+                  inputFormatters: [
+                    ThousandsFormatter(allowFraction: true),
+                    LengthLimitingTextInputFormatter(16)
+                  ],
                   style: TextStyle(fontSize: 16.0, color: Colors.black),
                 ),
               ),
@@ -71,6 +77,7 @@ class MyHomePage extends StatelessWidget {
                   keyboardType: TextInputType.number,
                   inputFormatters: [
                     CreditCardFormatter(),
+                    LengthLimitingTextInputFormatter(19)
                   ],
                   style: TextStyle(fontSize: 16.0, color: Colors.black),
                 ),

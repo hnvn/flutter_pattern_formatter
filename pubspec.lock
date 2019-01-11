@@ -34,6 +34,11 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_analysis_options:
+    dependency: transitive
+    description: flutter
+    source: sdk
+    version: "1.0.0"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -136,4 +141,4 @@ packages:
     source: hosted
     version: "2.0.8"
 sdks:
-  dart: ">=2.0.0 <3.0.0"
+  dart: ">=2.1.0 <3.0.0"

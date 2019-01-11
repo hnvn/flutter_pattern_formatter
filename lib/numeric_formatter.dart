@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart' show TextField;
 import 'package:intl/intl.dart';
@@ -101,13 +102,16 @@ class CreditCardFormatter extends NumberInputFormatter {
 /// format input displayed on [TextField]
 ///
 abstract class NumberInputFormatter extends TextInputFormatter {
+  TextEditingValue _lastNewValue;
+
   @override
   TextEditingValue formatEditUpdate(
       TextEditingValue oldValue, TextEditingValue newValue) {
-    /// nothing changes, do nothing
-    if (oldValue.text == newValue.text) {
-      return newValue;
+    /// nothing changes, nothing to do
+    if (newValue == _lastNewValue) {
+      return oldValue;
     }
+    _lastNewValue = newValue;
 
     /// remove all invalid characters
     newValue = _formatValue(oldValue, newValue);
@@ -146,9 +150,13 @@ abstract class NumberInputFormatter extends TextInputFormatter {
         !_isUserInput(newText[selectionIndex - 1])) {
       selectionIndex--;
     }
-    return TextEditingValue(
+
+    return newValue.copyWith(
         text: newText,
-        selection: TextSelection.collapsed(offset: selectionIndex));
+        selection: TextSelection.collapsed(offset: selectionIndex),
+        composing: defaultTargetPlatform == TargetPlatform.iOS
+            ? TextRange(start: 0, end: 0) // this would fix the text flicker issue in iOS, but the main reason is still unexplained
+            : TextRange.empty);
   }
 
   /// check character from user input or being inserted by pattern formatter

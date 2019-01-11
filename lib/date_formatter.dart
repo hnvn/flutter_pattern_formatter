@@ -1,5 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart' show TextField;
+import 'dart:math';
 
 const INDEX_NOT_FOUND = -1;
 
@@ -11,26 +13,28 @@ const INDEX_NOT_FOUND = -1;
 /// placeholder characters by user's input.
 ///
 class DateInputFormatter extends TextInputFormatter {
-  String placeholder = '--/--/----';
-  TextEditingValue lastNewValue;
+  String _placeholder = '--/--/----';
+  TextEditingValue _lastNewValue;
 
   @override
   TextEditingValue formatEditUpdate(
       TextEditingValue oldValue, TextEditingValue newValue) {
     /// provides placeholder text when user start editing
     if (oldValue.text.isEmpty) {
-      return TextEditingValue(
-        text: placeholder,
-        selection: TextSelection.collapsed(offset: 0),
-        composing: TextRange.empty,
+      oldValue = oldValue.copyWith(
+        text: _placeholder,
       );
+      newValue = newValue.copyWith(
+        text: _fillInputToPlaceholder(newValue.text),
+      );
+      return newValue;
     }
 
     /// nothing changes, nothing to do
-    if (newValue == lastNewValue) {
+    if (newValue == _lastNewValue) {
       return oldValue;
     }
-    lastNewValue = newValue;
+    _lastNewValue = newValue;
 
     int offset = newValue.selection.baseOffset;
 
@@ -85,9 +89,12 @@ class DateInputFormatter extends TextInputFormatter {
     }
 
     return oldValue.copyWith(
-        text: resultText,
-        selection: TextSelection.collapsed(offset: offset),
-        composing: TextRange.empty);
+      text: resultText,
+      selection: TextSelection.collapsed(offset: offset),
+      composing: defaultTargetPlatform == TargetPlatform.iOS
+          ? TextRange(start: 0, end: 0)
+          : TextRange.empty,
+    );
   }
 
   int _indexOfDifference(String cs1, String cs2) {
@@ -109,5 +116,16 @@ class DateInputFormatter extends TextInputFormatter {
     return INDEX_NOT_FOUND;
   }
 
-
+  String _fillInputToPlaceholder(String input) {
+    if (input == null || input.isEmpty) {
+      return _placeholder;
+    }
+    String result = _placeholder;
+    final index = [0, 1, 3, 4, 6, 7, 8, 9];
+    final length = min(index.length, input.length);
+    for (int i = 0; i < length; i++) {
+      result = result.replaceRange(index[i], index[i] + 1, input[i]);
+    }
+    return result;
+  }
 }
