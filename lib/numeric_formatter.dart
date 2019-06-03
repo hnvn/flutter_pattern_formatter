@@ -108,8 +108,8 @@ abstract class NumberInputFormatter extends TextInputFormatter {
   TextEditingValue formatEditUpdate(
       TextEditingValue oldValue, TextEditingValue newValue) {
     /// nothing changes, nothing to do
-    if (newValue == _lastNewValue) {
-      return oldValue;
+    if (newValue.text == _lastNewValue?.text) {
+      return newValue;
     }
     _lastNewValue = newValue;
 
