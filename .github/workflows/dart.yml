@@ -12,8 +12,8 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Setup Flutter environment
-      run: sudo .github/home/sdks/flutter/flutter doctor
+      run: sudo ./github/home/sdks/flutter/flutter doctor
     - name: Install dependencies
-      run: sudo .github/home/sdks/flutter/flutter packages get
+      run: sudo ./github/home/sdks/flutter/flutter packages get
     - name: Run tests
-      run: .github/home/sdks/flutter/flutter test
+      run: ./github/home/sdks/flutter/flutter test
