@@ -13,6 +13,6 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Install dependencies
-      run: flutter packages get
+      run: sudo flutter packages get
     - name: Run tests
       run: flutter test
