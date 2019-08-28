@@ -10,9 +10,10 @@ jobs:
     container: cirrusci/flutter:v1.7.8-hotfix.4
     
     steps:
-    - uses: actions/docker-build@latest
     - uses: actions/checkout@v1
+    - name: Setup Flutter environment
+      run: sudo .github/home/sdks/flutter/flutter doctor
     - name: Install dependencies
-      run: sudo flutter packages get
+      run: sudo .github/home/sdks/flutter/flutter packages get
     - name: Run tests
-      run: flutter test
+      run: .github/home/sdks/flutter/flutter test
