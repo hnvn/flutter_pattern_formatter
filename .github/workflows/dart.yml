@@ -1,19 +1,17 @@
-name: Flutter CI
+name: unit test
 
 on: [push]
 
 jobs:
-  test:
 
-    runs-on: ubuntu-latest
-    
-    container: cirrusci/flutter:v1.7.8-hotfix.4
-    
+  test:
     steps:
     - uses: actions/checkout@v1
-    - name: Setup Flutter environment
-      run: sudo ./github/home/sdks/flutter/flutter doctor
-    - name: Install dependencies
-      run: sudo ./github/home/sdks/flutter/flutter packages get
-    - name: Run tests
-      run: ./github/home/sdks/flutter/flutter test
+    - uses: actions/setup-java@v1
+      with:
+        java-version: '12.x'
+    - uses: subosito/flutter-action@v1
+        with:
+        flutter-version: '1.7.8-hotfix4'
+    - run: flutter pub get
+    - run: flutter test
