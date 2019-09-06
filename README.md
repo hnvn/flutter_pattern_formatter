@@ -1,6 +1,6 @@
 # PatternFormatter
 
-[![pub package](https://img.shields.io/pub/v/pattern_formatter.svg)](https://pub.dartlang.org/packages/pattern_formatter) [![Build Status](https://travis-ci.org/hnvn/flutter_pattern_formatter.svg?branch=master)](https://travis-ci.org/hnvn/flutter_pattern_formatter)
+[![pub package](https://img.shields.io/pub/v/pattern_formatter.svg)](https://pub.dartlang.org/packages/pattern_formatter) ![](https://github.com/hnvn/flutter_pattern_formatter/workflows/unit%20test/badge.svg)
 
 A Flutter package provides some implementations of TextInputFormatter that format input with pre-defined patterns
 
