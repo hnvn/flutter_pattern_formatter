@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart' show TextField;
 import 'package:intl/intl.dart';
@@ -154,9 +153,7 @@ abstract class NumberInputFormatter extends TextInputFormatter {
     return newValue.copyWith(
         text: newText,
         selection: TextSelection.collapsed(offset: selectionIndex),
-        composing: defaultTargetPlatform == TargetPlatform.iOS
-            ? TextRange(start: 0, end: 0) // this would fix the text flicker issue in iOS, but the main reason is still unexplained
-            : TextRange.empty);
+        composing: TextRange.empty);
   }
 
   /// check character from user input or being inserted by pattern formatter
