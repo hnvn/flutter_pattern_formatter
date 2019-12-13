@@ -1,3 +1,7 @@
+## [1.0.1] - 13/12/2019
+
+* upgrade `intl` dependency
+
 ## [1.0.0] - 22/11/2019
 
 * stable release
