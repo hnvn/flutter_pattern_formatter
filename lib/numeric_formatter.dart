@@ -1,8 +1,8 @@
-import 'package:flutter/services.dart';
-import 'package:flutter/material.dart' show TextField;
-import 'package:intl/intl.dart';
-
 import 'dart:math';
+
+import 'package:flutter/material.dart' show TextField;
+import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 
 ///
 /// An implementation of [NumberInputFormatter] automatically inserts thousands
@@ -165,4 +165,68 @@ abstract class NumberInputFormatter extends TextInputFormatter {
   /// validate user input
   TextEditingValue _formatValue(
       TextEditingValue oldValue, TextEditingValue newValue);
+}
+
+/// Formatter that restricts the number of digits before and after a decimal point
+class DecimalFormatter extends TextInputFormatter {
+  final int decimalCount;
+  final int numberCount;
+
+  DecimalFormatter({this.decimalCount = 3, this.numberCount = 7}) : super();
+
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    /// Blank string is allowed
+    if (newValue.text == "") {
+      return newValue;
+    }
+    try {
+      /// Check if the number is parseable.  This throws out anything that would make it invalid i.e. alpha characters.
+      final isNotANumber = double.tryParse(newValue.text).isNaN;
+      if (isNotANumber) {
+        return oldValue;
+      }
+    } catch (e) {
+      return oldValue;
+    }
+
+    /// Check how many decimal characters are in the string.  If more than 2, kick it out.
+    final segments = newValue.text.split('.');
+    final numberOfDecimal = segments.length;
+    if (numberOfDecimal > 2) {
+      return oldValue;
+    } else {
+      /// If we have a decimal
+      if (segments.length == 2) {
+        /// Check that both the number count and decimal pass
+        if (isDecimalPass(segments[1]) && isNumberPass(segments[0])) {
+          return newValue;
+        }
+        return oldValue;
+      } else {
+        /// If we don't have a decimal, just check that the number passes
+        if (isNumberPass(segments[0])) {
+          return newValue;
+        }
+        return oldValue;
+      }
+    }
+  }
+
+  /// checks string against decimal count
+  isDecimalPass(String text) {
+    if (text.length > decimalCount) {
+      return false;
+    }
+    return true;
+  }
+
+  /// checks string against number count
+  isNumberPass(String text) {
+    if (text.length > numberCount) {
+      return false;
+    }
+    return true;
+  }
 }
