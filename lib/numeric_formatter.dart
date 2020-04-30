@@ -171,12 +171,18 @@ abstract class NumberInputFormatter extends TextInputFormatter {
 class DecimalFormatter extends TextInputFormatter {
   final int decimalCount;
   final int numberCount;
+  static final NumberFormat _formatter = NumberFormat.decimalPattern();
+  final NumberFormat formatter;
 
-  DecimalFormatter({this.decimalCount = 3, this.numberCount = 7}) : super();
+  DecimalFormatter(
+      {this.decimalCount = 3, this.numberCount = 7, this.formatter})
+      : super();
 
   @override
   TextEditingValue formatEditUpdate(
       TextEditingValue oldValue, TextEditingValue newValue) {
+    final _decimalSeparator = (formatter ?? _formatter).symbols.DECIMAL_SEP;
+
     /// Blank string is allowed
     if (newValue.text == "") {
       return newValue;
@@ -192,7 +198,7 @@ class DecimalFormatter extends TextInputFormatter {
     }
 
     /// Check how many decimal characters are in the string.  If more than 2, kick it out.
-    final segments = newValue.text.split('.');
+    final segments = newValue.text.split(_decimalSeparator);
     final numberOfDecimal = segments.length;
     if (numberOfDecimal > 2) {
       return oldValue;
