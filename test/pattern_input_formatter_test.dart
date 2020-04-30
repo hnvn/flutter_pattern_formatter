@@ -1,7 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/intl.dart';
-
 import 'package:pattern_formatter/pattern_formatter.dart';
 
 void main() {
@@ -16,6 +15,9 @@ _numericFormatterSmokeTest() {
   final ThousandsFormatter decimalFormatter = ThousandsFormatter(
       formatter: NumberFormat.decimalPattern('en_US'), allowFraction: true);
   final CreditCardFormatter creditCardFormatter = CreditCardFormatter();
+
+  final DecimalFormatter decimalFormatterTwoDigits =
+      DecimalFormatter(decimalCount: 2);
 
   test('numeric filter smoke test', () {
     final newValue1 = thousandsFormatter.formatEditUpdate(
@@ -36,11 +38,36 @@ _numericFormatterSmokeTest() {
         TextEditingValue(
             text: '12a', selection: TextSelection.collapsed(offset: 3)));
 
+    final twoDigitTestCharCheck = decimalFormatterTwoDigits.formatEditUpdate(
+        TextEditingValue(
+            text: '12', selection: TextSelection.collapsed(offset: 2)),
+        TextEditingValue(
+            text: '12a', selection: TextSelection.collapsed(offset: 3)));
+
+    final twoDigitTestCheck = decimalFormatterTwoDigits.formatEditUpdate(
+        TextEditingValue(
+            text: '12', selection: TextSelection.collapsed(offset: 2)),
+        TextEditingValue(
+            text: '12.1', selection: TextSelection.collapsed(offset: 3)));
+
+    final twoDigitTestTooManyDecimalsCheck =
+        decimalFormatterTwoDigits.formatEditUpdate(
+            TextEditingValue(
+                text: '12', selection: TextSelection.collapsed(offset: 2)),
+            TextEditingValue(
+                text: '12.133', selection: TextSelection.collapsed(offset: 3)));
+
     expect(newValue1.text, equals('12'));
 
     expect(newValue2.text, equals('12'));
 
     expect(newValue3.text, equals('12'));
+
+    expect(twoDigitTestCharCheck.text, equals('12'));
+
+    expect(twoDigitTestCheck.text, equals('12.1'));
+
+    expect(twoDigitTestTooManyDecimalsCheck.text, equals('12'));
   });
 
   test('thousands grouping smoke test', () {
