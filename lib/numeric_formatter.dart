@@ -171,11 +171,15 @@ abstract class NumberInputFormatter extends TextInputFormatter {
 class DecimalFormatter extends TextInputFormatter {
   final int decimalCount;
   final int numberCount;
+  final bool allowNegatives;
   static final NumberFormat _formatter = NumberFormat.decimalPattern();
   final NumberFormat formatter;
 
   DecimalFormatter(
-      {this.decimalCount = 3, this.numberCount = 7, this.formatter})
+      {this.decimalCount = 3,
+      this.numberCount = 7,
+      this.formatter,
+      this.allowNegatives = true})
       : super();
 
   @override
@@ -187,6 +191,10 @@ class DecimalFormatter extends TextInputFormatter {
     if (newValue.text == "") {
       return newValue;
     }
+    if (newValue.text.contains("-") && !allowNegatives) {
+      return oldValue;
+    }
+
     try {
       /// Check if the number is parseable.  This throws out anything that would make it invalid i.e. alpha characters.
       final isNotANumber = double.tryParse(newValue.text).isNaN;
