@@ -13,8 +13,10 @@ void main() {
 _numericFormatterSmokeTest() {
   final ThousandsFormatter thousandsFormatter =
       ThousandsFormatter(formatter: NumberFormat.decimalPattern('en_US'));
-  final ThousandsFormatter decimalFormatter = ThousandsFormatter(
+  final ThousandsFormatter decimalFormatterUS = ThousandsFormatter(
       formatter: NumberFormat.decimalPattern('en_US'), allowFraction: true);
+  final ThousandsFormatter decimalFormatterES = ThousandsFormatter(
+      formatter: NumberFormat.decimalPattern('es_ES'), allowFraction: true);
   final CreditCardFormatter creditCardFormatter = CreditCardFormatter();
 
   test('numeric filter smoke test', () {
@@ -30,7 +32,13 @@ _numericFormatterSmokeTest() {
         TextEditingValue(
             text: '12a', selection: TextSelection.collapsed(offset: 3)));
 
-    final newValue3 = decimalFormatter.formatEditUpdate(
+    final newValue3 = decimalFormatterUS.formatEditUpdate(
+        TextEditingValue(
+            text: '12', selection: TextSelection.collapsed(offset: 2)),
+        TextEditingValue(
+            text: '12a', selection: TextSelection.collapsed(offset: 3)));
+
+    final newValue4 = decimalFormatterES.formatEditUpdate(
         TextEditingValue(
             text: '12', selection: TextSelection.collapsed(offset: 2)),
         TextEditingValue(
@@ -41,6 +49,8 @@ _numericFormatterSmokeTest() {
     expect(newValue2.text, equals('12'));
 
     expect(newValue3.text, equals('12'));
+
+    expect(newValue4.text, equals('12'));
   });
 
   test('thousands grouping smoke test', () {
@@ -63,7 +73,7 @@ _numericFormatterSmokeTest() {
 
     expect(newValue2.text, equals('12'));
 
-    final newValue3 = decimalFormatter.formatEditUpdate(
+    final newValue3 = decimalFormatterUS.formatEditUpdate(
         TextEditingValue(
             text: '12', selection: TextSelection.collapsed(offset: 2)),
         TextEditingValue(
@@ -71,21 +81,21 @@ _numericFormatterSmokeTest() {
 
     expect(newValue3.text, equals('12.'));
 
-    final newValue4 = decimalFormatter.formatEditUpdate(
+    final newValue4 = decimalFormatterUS.formatEditUpdate(
         newValue1,
         TextEditingValue(
             text: '1,234.', selection: TextSelection.collapsed(offset: 6)));
 
     expect(newValue4.text, equals('1,234.'));
 
-    final newValue5 = decimalFormatter.formatEditUpdate(
+    final newValue5 = decimalFormatterUS.formatEditUpdate(
         newValue4,
         TextEditingValue(
             text: '1,234.5', selection: TextSelection.collapsed(offset: 7)));
 
     expect(newValue5.text, equals('1,234.5'));
 
-    final newValue6 = decimalFormatter.formatEditUpdate(
+    final newValue6 = decimalFormatterUS.formatEditUpdate(
         TextEditingValue(
             text: '1,234.5', selection: TextSelection.collapsed(offset: 3)),
         TextEditingValue(
@@ -95,6 +105,39 @@ _numericFormatterSmokeTest() {
         newValue6,
         equals(TextEditingValue(
             text: '12,134.5', selection: TextSelection.collapsed(offset: 4))));
+
+    final newValue7 = decimalFormatterES.formatEditUpdate(
+        TextEditingValue(
+            text: '12', selection: TextSelection.collapsed(offset: 2)),
+        TextEditingValue(
+            text: '12,', selection: TextSelection.collapsed(offset: 3)));
+
+    expect(newValue7.text, equals('12,'));
+
+    final newValue8 = decimalFormatterES.formatEditUpdate(
+        newValue1,
+        TextEditingValue(
+            text: '1.234,', selection: TextSelection.collapsed(offset: 6)));
+
+    expect(newValue8.text, equals('1.234,'));
+
+    final newValue9 = decimalFormatterES.formatEditUpdate(
+        newValue8,
+        TextEditingValue(
+            text: '1.234,5', selection: TextSelection.collapsed(offset: 7)));
+
+    expect(newValue9.text, equals('1.234,5'));
+
+    final newValue10 = decimalFormatterES.formatEditUpdate(
+        TextEditingValue(
+            text: '1.234,5', selection: TextSelection.collapsed(offset: 3)),
+        TextEditingValue(
+            text: '1.2134,5', selection: TextSelection.collapsed(offset: 4)));
+
+    expect(
+        newValue10,
+        equals(TextEditingValue(
+            text: '12.134,5', selection: TextSelection.collapsed(offset: 4))));
   });
 
   test('credit card number grouping smoke test', () {
