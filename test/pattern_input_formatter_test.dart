@@ -104,7 +104,7 @@ _numericFormatterSmokeTest() {
     expect(
         newValue6,
         equals(TextEditingValue(
-            text: '12,134.5', selection: TextSelection.collapsed(offset: 5))));
+            text: '12,134.5', selection: TextSelection.collapsed(offset: 4))));
 
     final newValue7 = decimalFormatterES.formatEditUpdate(
         TextEditingValue(
@@ -137,7 +137,7 @@ _numericFormatterSmokeTest() {
     expect(
         newValue10,
         equals(TextEditingValue(
-            text: '12.134,5', selection: TextSelection.collapsed(offset: 5))));
+            text: '12.134,5', selection: TextSelection.collapsed(offset: 4))));
   });
 
   test('credit card number grouping smoke test', () {
