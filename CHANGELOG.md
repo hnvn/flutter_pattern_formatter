@@ -1,3 +1,7 @@
+## [1.0.2] - 11/06/2020
+
+* fix bug international number seperators
+
 ## [1.0.1] - 13/12/2019
 
 * upgrade `intl` dependency
