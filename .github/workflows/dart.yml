@@ -15,7 +15,7 @@ jobs:
         java-version: '12.x'
     - uses: subosito/flutter-action@v1
       with:
-        flutter-version: '1.17.x'
+        flutter-version: '1.19.x'
     - run: flutter pub get
     - run: flutter test --coverage
     - uses: codecov/codecov-action@v1.0.7
