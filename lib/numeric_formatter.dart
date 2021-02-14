@@ -12,7 +12,7 @@ import 'dart:math';
 class ThousandsFormatter extends NumberInputFormatter {
   static final NumberFormat _formatter = NumberFormat.decimalPattern();
 
-  final WhitelistingTextInputFormatter _decimalFormatter;
+  final FilteringTextInputFormatter _decimalFormatter;
   final String _decimalSeparator;
   final RegExp _decimalRegex;
 
@@ -24,7 +24,7 @@ class ThousandsFormatter extends NumberInputFormatter {
         _decimalRegex = RegExp(allowFraction
             ? '[0-9]+([${(formatter ?? _formatter).symbols.DECIMAL_SEP}])?'
             : r'\d+'),
-        _decimalFormatter = WhitelistingTextInputFormatter(RegExp(allowFraction
+        _decimalFormatter = FilteringTextInputFormatter.allow(RegExp(allowFraction
             ? '[0-9]+([${(formatter ?? _formatter).symbols.DECIMAL_SEP}])?'
             : r'\d+'));
 
@@ -67,8 +67,8 @@ class ThousandsFormatter extends NumberInputFormatter {
 ///
 class CreditCardFormatter extends NumberInputFormatter {
   static final RegExp _digitOnlyRegex = RegExp(r'\d+');
-  static final WhitelistingTextInputFormatter _digitOnlyFormatter =
-      WhitelistingTextInputFormatter(_digitOnlyRegex);
+  static final FilteringTextInputFormatter _digitOnlyFormatter =
+      FilteringTextInputFormatter.allow(_digitOnlyRegex);
 
   final String separator;
 
