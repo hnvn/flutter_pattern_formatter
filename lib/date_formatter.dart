@@ -14,7 +14,7 @@ const INDEX_NOT_FOUND = -1;
 ///
 class DateInputFormatter extends TextInputFormatter {
   String _placeholder = '--/--/----';
-  TextEditingValue _lastNewValue;
+  TextEditingValue? _lastNewValue;
 
   @override
   TextEditingValue formatEditUpdate(
@@ -49,7 +49,7 @@ class DateInputFormatter extends TextInputFormatter {
 
     final String oldText = oldValue.text;
     final String newText = newValue.text;
-    String resultText;
+    String? resultText;
 
     /// handle user editing, there're two cases:
     /// 1. user add new digit: replace '-' at cursor's position by user's input.
@@ -79,7 +79,7 @@ class DateInputFormatter extends TextInputFormatter {
     }
 
     /// verify the number and position of splash character
-    final splashes = resultText.replaceAll(RegExp(r'[^/]'), '');
+    final splashes = resultText!.replaceAll(RegExp(r'[^/]'), '');
     int count = splashes.length;
     if (resultText.length > 10 ||
         count != 2 ||
@@ -97,7 +97,7 @@ class DateInputFormatter extends TextInputFormatter {
     );
   }
 
-  int _indexOfDifference(String cs1, String cs2) {
+  int _indexOfDifference(String? cs1, String? cs2) {
     if (cs1 == cs2) {
       return INDEX_NOT_FOUND;
     }
@@ -116,7 +116,7 @@ class DateInputFormatter extends TextInputFormatter {
     return INDEX_NOT_FOUND;
   }
 
-  String _fillInputToPlaceholder(String input) {
+  String _fillInputToPlaceholder(String? input) {
     if (input == null || input.isEmpty) {
       return _placeholder;
     }

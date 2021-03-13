@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends StatelessWidget {
   final String title;
 
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage({Key? key, required this.title}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +91,7 @@ class MyHomePage extends StatelessWidget {
                       hintText: 'dd/MM/yyyy'),
                   keyboardType: TextInputType.number,
                   inputFormatters: [
-                    WhitelistingTextInputFormatter(RegExp(r'\d+|-|/')),
+                    FilteringTextInputFormatter.allow(RegExp(r'\d+|-|/')),
                     DateInputFormatter(),
                   ],
                   style: TextStyle(fontSize: 16.0, color: Colors.black),

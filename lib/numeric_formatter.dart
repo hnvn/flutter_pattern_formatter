@@ -12,11 +12,11 @@ import 'dart:math';
 class ThousandsFormatter extends NumberInputFormatter {
   static final NumberFormat _formatter = NumberFormat.decimalPattern();
 
-  final WhitelistingTextInputFormatter _decimalFormatter;
+  final FilteringTextInputFormatter _decimalFormatter;
   final String _decimalSeparator;
   final RegExp _decimalRegex;
 
-  final NumberFormat formatter;
+  final NumberFormat? formatter;
   final bool allowFraction;
 
   ThousandsFormatter({this.formatter, this.allowFraction = false})
@@ -24,13 +24,14 @@ class ThousandsFormatter extends NumberInputFormatter {
         _decimalRegex = RegExp(allowFraction
             ? '[0-9]+([${(formatter ?? _formatter).symbols.DECIMAL_SEP}])?'
             : r'\d+'),
-        _decimalFormatter = WhitelistingTextInputFormatter(RegExp(allowFraction
-            ? '[0-9]+([${(formatter ?? _formatter).symbols.DECIMAL_SEP}])?'
-            : r'\d+'));
+        _decimalFormatter = FilteringTextInputFormatter.allow(RegExp(
+            allowFraction
+                ? '[0-9]+([${(formatter ?? _formatter).symbols.DECIMAL_SEP}])?'
+                : r'\d+'));
 
   @override
-  String _formatPattern(String digits) {
-    if (digits == null || digits.isEmpty) return digits;
+  String _formatPattern(String? digits) {
+    if (digits == null || digits.isEmpty) return '';
     num number;
     if (allowFraction) {
       String decimalDigits = digits;
@@ -67,8 +68,8 @@ class ThousandsFormatter extends NumberInputFormatter {
 ///
 class CreditCardFormatter extends NumberInputFormatter {
   static final RegExp _digitOnlyRegex = RegExp(r'\d+');
-  static final WhitelistingTextInputFormatter _digitOnlyFormatter =
-      WhitelistingTextInputFormatter(_digitOnlyRegex);
+  static final FilteringTextInputFormatter _digitOnlyFormatter =
+      FilteringTextInputFormatter.allow(_digitOnlyRegex);
 
   final String separator;
 
@@ -108,7 +109,7 @@ class CreditCardFormatter extends NumberInputFormatter {
 /// format input displayed on [TextField]
 ///
 abstract class NumberInputFormatter extends TextInputFormatter {
-  TextEditingValue _lastNewValue;
+  TextEditingValue? _lastNewValue;
 
   @override
   TextEditingValue formatEditUpdate(
