@@ -1,3 +1,7 @@
+## [2.0.0] - 13/03/2021
+
+* migrate to nullsafety
+
 ## [1.0.2] - 11/06/2020
 
 * fix bug international number seperators
