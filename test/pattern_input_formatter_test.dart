@@ -13,6 +13,11 @@ void main() {
 _numericFormatterSmokeTest() {
   final ThousandsFormatter thousandsFormatter =
       ThousandsFormatter(formatter: NumberFormat.decimalPattern('en_US'));
+
+  final ThousandsFormatter thousandsFormatterAllowedFraction =
+      ThousandsFormatter(
+          formatter: NumberFormat.decimalPattern('en_US'), allowFraction: true);
+
   final ThousandsFormatter decimalFormatterUS = ThousandsFormatter(
       formatter: NumberFormat.decimalPattern('en_US'), allowFraction: true);
   final ThousandsFormatter decimalFormatterES = ThousandsFormatter(
@@ -51,6 +56,52 @@ _numericFormatterSmokeTest() {
     expect(newValue3.text, equals('12'));
 
     expect(newValue4.text, equals('12'));
+  });
+
+  test('when input is below than 1 return expected value', () {
+    final newValue1 = thousandsFormatterAllowedFraction.formatEditUpdate(
+        TextEditingValue(
+            text: '0', selection: TextSelection.collapsed(offset: 1)),
+        TextEditingValue(
+            text: '0.', selection: TextSelection.collapsed(offset: 2)));
+
+    final newValue2 = thousandsFormatterAllowedFraction.formatEditUpdate(
+        TextEditingValue(
+            text: '0.', selection: TextSelection.collapsed(offset: 2)),
+        TextEditingValue(
+            text: '0.0', selection: TextSelection.collapsed(offset: 3)));
+
+    final newValue3 = thousandsFormatterAllowedFraction.formatEditUpdate(
+        TextEditingValue(
+            text: '0.0', selection: TextSelection.collapsed(offset: 3)),
+        TextEditingValue(
+            text: '0.00', selection: TextSelection.collapsed(offset: 4)));
+
+    final newValue4 = thousandsFormatterAllowedFraction.formatEditUpdate(
+        TextEditingValue(
+            text: '0.00', selection: TextSelection.collapsed(offset: 4)),
+        TextEditingValue(
+            text: '0.005', selection: TextSelection.collapsed(offset: 5)));
+
+    final newValue5 = thousandsFormatterAllowedFraction.formatEditUpdate(
+        TextEditingValue(
+            text: '0.', selection: TextSelection.collapsed(offset: 2)),
+        TextEditingValue(
+            text: '0.2', selection: TextSelection.collapsed(offset: 3)));
+
+    final newValue6 = thousandsFormatterAllowedFraction.formatEditUpdate(
+        TextEditingValue(
+            text: '0.0', selection: TextSelection.collapsed(offset: 3)),
+        TextEditingValue(
+            text: '0.02', selection: TextSelection.collapsed(offset: 4)));
+
+    expect(newValue1.text, equals('0.'));
+    expect(newValue2.text, equals('0.0'));
+    expect(newValue3.text, equals('0.00'));
+    expect(newValue4.text, equals('0.005'));
+
+    expect(newValue5.text, equals('0.2'));
+    expect(newValue6.text, equals('0.02'));
   });
 
   test('thousands grouping smoke test', () {
