@@ -31,7 +31,7 @@ class ThousandsFormatter extends NumberInputFormatter {
                 : r'\d+')),
         _skipValues = allowFraction
             ? List.generate(
-                _formatter.maximumFractionDigits,
+                _formatter.maximumFractionDigits + 1,
                 (index) =>
                     '0${(formatter ?? _formatter).symbols.DECIMAL_SEP}${List.generate(index, (index) => '0').join('')}')
             : const [];
