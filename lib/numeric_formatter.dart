@@ -40,7 +40,11 @@ class ThousandsFormatter extends NumberInputFormatter {
   TextEditingValue formatEditUpdate(
       TextEditingValue oldValue, TextEditingValue newValue) {
     if (allowFraction) {
-      if (_skipValues.contains(newValue.text)) {
+      if (_skipValues
+          .map((v) => v.substring(
+              v.indexOf((formatter ?? _formatter).symbols.DECIMAL_SEP)))
+          .contains(newValue.text.substring(newValue.text
+              .indexOf((formatter ?? _formatter).symbols.DECIMAL_SEP)))) {
         return newValue;
       }
     }

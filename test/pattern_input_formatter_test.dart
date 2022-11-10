@@ -59,6 +59,16 @@ _numericFormatterSmokeTest() {
   });
 
   test('when input is below than 1 return expected value', () {
+    final newValue2 = thousandsFormatterAllowedFraction.formatEditUpdate(
+        TextEditingValue(
+            text: '20.', selection: TextSelection.collapsed(offset: 2)),
+        TextEditingValue(
+            text: '20.0', selection: TextSelection.collapsed(offset: 3)));
+
+    expect(newValue2.text, equals('20.0'));
+  });
+
+  test('when input is below than 1 return expected value', () {
     final newValue1 = thousandsFormatterAllowedFraction.formatEditUpdate(
         TextEditingValue(
             text: '0', selection: TextSelection.collapsed(offset: 1)),
