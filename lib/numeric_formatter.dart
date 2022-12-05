@@ -22,11 +22,11 @@ class ThousandsFormatter extends NumberInputFormatter {
   ThousandsFormatter({this.formatter, this.allowFraction = false})
       : _decimalSeparator = (formatter ?? _formatter).symbols.DECIMAL_SEP,
         _decimalRegex = RegExp(allowFraction
-            ? '[0-9]+([${(formatter ?? _formatter).symbols.DECIMAL_SEP}])?'
+            ? '\-?[0-9]+([${(formatter ?? _formatter).symbols.DECIMAL_SEP}])?'
             : r'\d+'),
         _decimalFormatter = FilteringTextInputFormatter.allow(RegExp(
             allowFraction
-                ? '[0-9]+([${(formatter ?? _formatter).symbols.DECIMAL_SEP}])?'
+                ? '\-?[0-9]+([${(formatter ?? _formatter).symbols.DECIMAL_SEP}])?'
                 : r'\d+'));
 
   @override
