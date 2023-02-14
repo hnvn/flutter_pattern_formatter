@@ -18,6 +18,7 @@ class ThousandsFormatter extends NumberInputFormatter {
 
   final NumberFormat? formatter;
   final bool allowFraction;
+  final List<String> _skipValues;
 
   ThousandsFormatter({this.formatter, this.allowFraction = false})
       : _decimalSeparator = (formatter ?? _formatter).symbols.DECIMAL_SEP,
@@ -27,7 +28,32 @@ class ThousandsFormatter extends NumberInputFormatter {
         _decimalFormatter = FilteringTextInputFormatter.allow(RegExp(
             allowFraction
                 ? '[0-9]+([${(formatter ?? _formatter).symbols.DECIMAL_SEP}])?'
-                : r'\d+'));
+                : r'\d+')),
+        _skipValues = allowFraction
+            ? List.generate(
+                _formatter.maximumFractionDigits + 1,
+                (index) =>
+                    '0${(formatter ?? _formatter).symbols.DECIMAL_SEP}${List.generate(index, (index) => '0').join('')}')
+            : const [];
+
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    if (allowFraction) {
+      final indexOfDecimalSeperatorNewValue =
+          newValue.text.indexOf((formatter ?? _formatter).symbols.DECIMAL_SEP);
+      if (indexOfDecimalSeperatorNewValue != -1) {
+        if (_skipValues.map((v) {
+          final indexOfDecimanSeperator =
+              v.indexOf((formatter ?? _formatter).symbols.DECIMAL_SEP);
+          return v.substring(indexOfDecimanSeperator);
+        }).contains(newValue.text.substring(indexOfDecimalSeperatorNewValue))) {
+          return newValue;
+        }
+      }
+    }
+    return super.formatEditUpdate(oldValue, newValue);
+  }
 
   @override
   String _formatPattern(String? digits) {
