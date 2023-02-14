@@ -40,12 +40,16 @@ class ThousandsFormatter extends NumberInputFormatter {
   TextEditingValue formatEditUpdate(
       TextEditingValue oldValue, TextEditingValue newValue) {
     if (allowFraction) {
-      if (_skipValues
-          .map((v) => v.substring(
-              v.indexOf((formatter ?? _formatter).symbols.DECIMAL_SEP)))
-          .contains(newValue.text.substring(newValue.text
-              .indexOf((formatter ?? _formatter).symbols.DECIMAL_SEP)))) {
-        return newValue;
+      final indexOfDecimalSeperatorNewValue =
+          newValue.text.indexOf((formatter ?? _formatter).symbols.DECIMAL_SEP);
+      if (indexOfDecimalSeperatorNewValue != -1) {
+        if (_skipValues.map((v) {
+          final indexOfDecimanSeperator =
+              v.indexOf((formatter ?? _formatter).symbols.DECIMAL_SEP);
+          return v.substring(indexOfDecimanSeperator);
+        }).contains(newValue.text.substring(indexOfDecimalSeperatorNewValue))) {
+          return newValue;
+        }
       }
     }
     return super.formatEditUpdate(oldValue, newValue);
