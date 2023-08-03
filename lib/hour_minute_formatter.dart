@@ -1,19 +1,11 @@
-import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter/material.dart' show TextField;
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:pattern_formatter/consts.dart';
 
-///
-/// An implementation of [TextInputFormatter] provides a way to input date form
-/// with [TextField], such as dd/MM/yyyy. In order to guide user about input form,
-/// the formatter will provide [TextField] a placeholder --/--/---- as soon as
-/// user start editing. During editing session, the formatter will replace appropriate
-/// placeholder characters by user's input.
-///
-class DateInputFormatter extends TextInputFormatter {
-  String _placeholder = '--/--/----';
+class HourMinuteInputFormatter extends TextInputFormatter {
+  String _placeholder = '--:--';
   TextEditingValue? _lastNewValue;
 
   @override
@@ -39,7 +31,7 @@ class DateInputFormatter extends TextInputFormatter {
     int offset = newValue.selection.baseOffset;
 
     /// restrict user's input within the length of date form
-    if (offset > 10) {
+    if (offset > 5) {
       return oldValue;
     }
 
@@ -58,34 +50,24 @@ class DateInputFormatter extends TextInputFormatter {
     if (oldText.length < newText.length) {
       /// add new digit
       String newChar = newText[index];
-      if (index == 2 || index == 5) {
+      if (index == 2) {
         index++;
         offset++;
       }
       resultText = oldText.replaceRange(index, index + 1, newChar);
-      if (offset == 2 || offset == 5) {
+      if (offset == 2) {
         offset++;
       }
     } else if (oldText.length > newText.length) {
       /// delete digit
-      if (oldText[index] != '/') {
+      if (oldText[index] != ':') {
         resultText = oldText.replaceRange(index, index + 1, '-');
-        if (offset == 3 || offset == 6) {
+        if (offset == 3) {
           offset--;
         }
       } else {
         resultText = oldText;
       }
-    }
-
-    /// verify the number and position of splash character
-    final splashes = resultText!.replaceAll(RegExp(r'[^/]'), '');
-    int count = splashes.length;
-    if (resultText.length > 10 ||
-        count != 2 ||
-        resultText[2].toString() != '/' ||
-        resultText[5].toString() != '/') {
-      return oldValue;
     }
 
     return oldValue.copyWith(
@@ -121,7 +103,7 @@ class DateInputFormatter extends TextInputFormatter {
       return _placeholder;
     }
     String result = _placeholder;
-    final index = [0, 1, 3, 4, 6, 7, 8, 9];
+    final index = [0, 1, 3, 4];
     final length = min(index.length, input.length);
     for (int i = 0; i < length; i++) {
       result = result.replaceRange(index[i], index[i] + 1, input[i]);

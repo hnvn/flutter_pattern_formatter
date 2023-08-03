@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:pattern_formatter/hour_minute_formatter.dart';
 import 'package:pattern_formatter/pattern_formatter.dart';
 
 void main() => runApp(MyApp());
@@ -93,6 +94,22 @@ class MyHomePage extends StatelessWidget {
                   inputFormatters: [
                     FilteringTextInputFormatter.allow(RegExp(r'\d+|-|/')),
                     DateInputFormatter(),
+                  ],
+                  style: TextStyle(fontSize: 16.0, color: Colors.black),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 16.0, vertical: 24.0),
+                child: TextField(
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      isDense: true,
+                      hintText: 'HH:MM'),
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(RegExp(r'\d+|-|:')),
+                    HourMinuteInputFormatter(),
                   ],
                   style: TextStyle(fontSize: 16.0, color: Colors.black),
                 ),

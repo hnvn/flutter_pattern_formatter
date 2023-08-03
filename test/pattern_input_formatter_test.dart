@@ -1,6 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/intl.dart';
+import 'package:pattern_formatter/hour_minute_formatter.dart';
 
 import 'package:pattern_formatter/pattern_formatter.dart';
 
@@ -8,6 +9,8 @@ void main() {
   group('numeric formatter smoke test', _numericFormatterSmokeTest);
 
   group('date formatter smoke test', _dateFormatterSmokeTest);
+
+  group('Hour minute formatter test', _hourMinuteFormatterTest);
 }
 
 _numericFormatterSmokeTest() {
@@ -235,5 +238,75 @@ _dateFormatterSmokeTest() {
         newValue6,
         TextEditingValue(
             text: '12/12/2018', selection: TextSelection.collapsed(offset: 2)));
+  });
+}
+
+_hourMinuteFormatterTest() {
+  final formatter = HourMinuteInputFormatter();
+
+  test('date form input test', () {
+    // test insert placeholder when user start editing
+    final newValue1 = formatter.formatEditUpdate(
+        TextEditingValue(
+            text: '', selection: TextSelection.collapsed(offset: 0)),
+        TextEditingValue(
+            text: '', selection: TextSelection.collapsed(offset: 0)));
+
+    expect(
+        newValue1,
+        TextEditingValue(
+            text: '--:--', selection: TextSelection.collapsed(offset: 0)));
+
+    // test add a new digit at start position
+    final newValue2 = formatter.formatEditUpdate(
+        newValue1,
+        TextEditingValue(
+            text: '1--:--', selection: TextSelection.collapsed(offset: 1)));
+    expect(
+        newValue2,
+        TextEditingValue(
+            text: '1-:--', selection: TextSelection.collapsed(offset: 1)));
+
+    // test add a new digit in the middle
+    final newValue3 = formatter.formatEditUpdate(
+        newValue2.copyWith(selection: TextSelection.collapsed(offset: 3)),
+        TextEditingValue(
+            text: '1-:2--', selection: TextSelection.collapsed(offset: 4)));
+    expect(
+        newValue3,
+        TextEditingValue(
+            text: '1-:2-', selection: TextSelection.collapsed(offset: 4)));
+
+    // test delete
+    final newValue4 = formatter.formatEditUpdate(
+        newValue3,
+        TextEditingValue(
+            text: '1-:-', selection: TextSelection.collapsed(offset: 3)));
+    expect(
+        newValue4,
+        TextEditingValue(
+            text: '1-:--', selection: TextSelection.collapsed(offset: 2)));
+
+    // test restrict input length
+    final newValue5 = formatter.formatEditUpdate(
+        TextEditingValue(
+            text: '12:12', selection: TextSelection.collapsed(offset: 5)),
+        TextEditingValue(
+            text: '12:1299', selection: TextSelection.collapsed(offset: 6)));
+    expect(
+        newValue5,
+        TextEditingValue(
+            text: '12:12', selection: TextSelection.collapsed(offset: 5)));
+
+    // test delete when cursor stands right after splash
+    final newValue6 = formatter.formatEditUpdate(
+        TextEditingValue(
+            text: '12:12', selection: TextSelection.collapsed(offset: 3)),
+        TextEditingValue(
+            text: '1212:2018', selection: TextSelection.collapsed(offset: 9)));
+    expect(
+        newValue6,
+        TextEditingValue(
+            text: '12:12', selection: TextSelection.collapsed(offset: 3)));
   });
 }
