@@ -103,9 +103,10 @@ class MyHomePage extends StatelessWidget {
                     horizontal: 16.0, vertical: 24.0),
                 child: TextField(
                   decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      isDense: true,
-                      hintText: 'HH:MM'),
+                    border: OutlineInputBorder(),
+                    isDense: true,
+                    hintText: 'HH:mm',
+                  ),
                   keyboardType: TextInputType.number,
                   inputFormatters: [
                     FilteringTextInputFormatter.allow(RegExp(r'\d+|-|:')),

@@ -1,23 +1,34 @@
-import 'dart:math';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:pattern_formatter/consts.dart';
+import 'package:flutter/material.dart' show TextField;
+import 'package:pattern_formatter/services/pattern_formatter_service.dart';
+
+/// An implementation of [TextInputFormatter] provides a way to input hour and minute form
+/// with [TextField], such as HH:mm. In order to guide user about input form,
+/// the formatter will provide [TextField] a placeholder --:-- as soon as
+/// user start editing. During editing session, the formatter will replace appropriate
+/// placeholder characters by user's input.
 
 class HourMinuteInputFormatter extends TextInputFormatter {
   String _placeholder = '--:--';
   TextEditingValue? _lastNewValue;
+  final List<int> indexs = [0, 1, 3, 4];
 
   @override
   TextEditingValue formatEditUpdate(
       TextEditingValue oldValue, TextEditingValue newValue) {
     /// provides placeholder text when user start editing
+
+    final fillInputToPlaceholder = PatternFormatterService()
+        .fillInputToPlaceholder(
+            input: newValue.text, indexs: indexs, placeholder: _placeholder);
+
     if (oldValue.text.isEmpty) {
       oldValue = oldValue.copyWith(
         text: _placeholder,
       );
       newValue = newValue.copyWith(
-        text: _fillInputToPlaceholder(newValue.text),
+        text: fillInputToPlaceholder,
       );
       return newValue;
     }
@@ -46,7 +57,9 @@ class HourMinuteInputFormatter extends TextInputFormatter {
     /// handle user editing, there're two cases:
     /// 1. user add new digit: replace '-' at cursor's position by user's input.
     /// 2. user delete digit: replace digit at cursor's position by '-'
-    int index = _indexOfDifference(newText, oldText);
+    // int index = _indexOfDifference(newText, oldText);
+    int index =
+        PatternFormatterService().indexOfDiference(cs1: newText, cs2: oldText);
     if (oldText.length < newText.length) {
       /// add new digit
       String newChar = newText[index];
@@ -77,37 +90,5 @@ class HourMinuteInputFormatter extends TextInputFormatter {
           ? TextRange(start: 0, end: 0)
           : TextRange.empty,
     );
-  }
-
-  int _indexOfDifference(String? cs1, String? cs2) {
-    if (cs1 == cs2) {
-      return INDEX_NOT_FOUND;
-    }
-    if (cs1 == null || cs2 == null) {
-      return 0;
-    }
-    int i;
-    for (i = 0; i < cs1.length && i < cs2.length; ++i) {
-      if (cs1[i] != cs2[i]) {
-        break;
-      }
-    }
-    if (i < cs2.length || i < cs1.length) {
-      return i;
-    }
-    return INDEX_NOT_FOUND;
-  }
-
-  String _fillInputToPlaceholder(String? input) {
-    if (input == null || input.isEmpty) {
-      return _placeholder;
-    }
-    String result = _placeholder;
-    final index = [0, 1, 3, 4];
-    final length = min(index.length, input.length);
-    for (int i = 0; i < length; i++) {
-      result = result.replaceRange(index[i], index[i] + 1, input[i]);
-    }
-    return result;
   }
 }
