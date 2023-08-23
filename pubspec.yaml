@@ -1,17 +1,16 @@
 name: pattern_formatter
 description: A Flutter package provides some implementations of TextInputFormatter that format input with pre-defined patterns
-version: 2.0.0
-author: Hung Duy Ha <hunghd.yb@gmail.com>
+version: 3.0.0
 homepage: https://github.com/hnvn/flutter_pattern_formatter
 
 environment:
-  sdk: '>=2.12.0 <3.0.0'
+  sdk: '>=2.12.0 <4.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
 
-  intl: ^0.17.0
+  intl: ^0.18.0
 
 dev_dependencies:
   flutter_test:
