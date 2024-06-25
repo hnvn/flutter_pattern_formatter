@@ -1,3 +1,7 @@
+## 4.0.0
+
+* upgrade `intl` to v0.19
+
 ## 3.0.0
 
 * upgrade `intl` dependency to v0.18
