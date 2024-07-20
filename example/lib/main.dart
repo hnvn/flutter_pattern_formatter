@@ -41,9 +41,10 @@ class MyHomePage extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
                 child: TextField(
                   decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      isDense: true,
-                      labelText: 'Integer Number'),
+                    border: OutlineInputBorder(),
+                    isDense: true,
+                    labelText: 'Integer Number',
+                  ),
                   keyboardType: TextInputType.number,
                   inputFormatters: [
                     LengthLimitingTextInputFormatter(15),
@@ -56,9 +57,10 @@ class MyHomePage extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
                 child: TextField(
                   decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      isDense: true,
-                      labelText: 'Decimal Number'),
+                    border: OutlineInputBorder(),
+                    isDense: true,
+                    labelText: 'Decimal Number',
+                  ),
                   keyboardType: TextInputType.number,
                   inputFormatters: [
                     LengthLimitingTextInputFormatter(15),
@@ -71,9 +73,10 @@ class MyHomePage extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
                 child: TextField(
                   decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      isDense: true,
-                      labelText: 'Card Number'),
+                    border: OutlineInputBorder(),
+                    isDense: true,
+                    labelText: 'Card Number',
+                  ),
                   keyboardType: TextInputType.number,
                   inputFormatters: [
                     LengthLimitingTextInputFormatter(19),
@@ -86,9 +89,10 @@ class MyHomePage extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
                 child: TextField(
                   decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      isDense: true,
-                      hintText: 'dd/MM/yyyy'),
+                    border: OutlineInputBorder(),
+                    isDense: true,
+                    hintText: 'dd/MM/yyyy',
+                  ),
                   keyboardType: TextInputType.number,
                   inputFormatters: [
                     FilteringTextInputFormatter.allow(RegExp(r'\d+|-|/')),
@@ -96,7 +100,25 @@ class MyHomePage extends StatelessWidget {
                   ],
                   style: TextStyle(fontSize: 16.0, color: Colors.black),
                 ),
-              )
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
+                child: TextField(
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    isDense: true,
+                    labelText: 'Currency Number Format',
+                  ),
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [
+                    CurrencyFormatter(
+                      locale: 'de_DE', // locale of country
+                      symbol: '€', // symbol beside value
+                    ),
+                  ],
+                  style: TextStyle(fontSize: 16.0, color: Colors.black),
+                ),
+              ),
             ],
           ),
         ),
