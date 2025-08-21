@@ -1,3 +1,7 @@
+## 4.0.1
+
+* remove constraints to version of `intl`
+
 ## 4.0.0
 
 * upgrade `intl` to v0.19
