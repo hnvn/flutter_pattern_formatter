@@ -7,7 +7,55 @@ import 'package:pattern_formatter/pattern_formatter.dart';
 void main() {
   group('numeric formatter smoke test', _numericFormatterSmokeTest);
 
+  group('fraction preservation test', _fractionPreservationTest);
+
   group('date formatter smoke test', _dateFormatterSmokeTest);
+}
+
+_fractionPreservationTest() {
+  final decimalUS = ThousandsFormatter(
+      formatter: NumberFormat.decimalPattern('en_US'), allowFraction: true);
+  final decimalES = ThousandsFormatter(
+      formatter: NumberFormat.decimalPattern('es_ES'), allowFraction: true);
+
+  TextEditingValue tv(String text) => TextEditingValue(
+      text: text, selection: TextSelection.collapsed(offset: text.length));
+
+  String format(ThousandsFormatter f, String input) =>
+      f.formatEditUpdate(tv(''), tv(input)).text;
+
+  test('keeps trailing zeros in the fraction part', () {
+    expect(format(decimalUS, '1.0'), equals('1.0'));
+    expect(format(decimalUS, '10.50'), equals('10.50'));
+    expect(format(decimalUS, '2.300'), equals('2.300'));
+    expect(format(decimalUS, '12.00'), equals('12.00'));
+  });
+
+  test('does not round fraction digits beyond 3 places', () {
+    expect(format(decimalUS, '1.2345'), equals('1.2345'));
+    expect(format(decimalUS, '1.9999'), equals('1.9999'));
+    expect(format(decimalUS, '0.123456789'), equals('0.123456789'));
+  });
+
+  test('still groups the integer part while preserving the fraction', () {
+    expect(format(decimalUS, '1234.50'), equals('1,234.50'));
+    expect(format(decimalUS, '1234567.80'), equals('1,234,567.80'));
+  });
+
+  test('preserves fraction with locale-specific separators', () {
+    expect(format(decimalES, '1234,50'), equals('1.234,50'));
+    expect(format(decimalES, '2,300'), equals('2,300'));
+  });
+
+  test('does not collapse large integers to zero', () {
+    const big = '123456789012345678901234567890';
+    final grouped = format(decimalUS, big);
+    expect(grouped.replaceAll(',', ''), equals(big));
+  });
+
+  test('collapses stray extra separators in the fraction part', () {
+    expect(format(decimalUS, '12.34.56'), equals('12.3456'));
+  });
 }
 
 _numericFormatterSmokeTest() {

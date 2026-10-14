@@ -21,31 +21,46 @@ class ThousandsFormatter extends NumberInputFormatter {
   ThousandsFormatter({this.formatter, this.allowFraction = false})
       : _decimalSeparator = (formatter ?? _formatter).symbols.DECIMAL_SEP,
         _decimalRegex = RegExp(allowFraction
-            ? '[0-9]+([${(formatter ?? _formatter).symbols.DECIMAL_SEP}])?'
+            ? '[0-9]+(${RegExp.escape((formatter ?? _formatter).symbols.DECIMAL_SEP)})?'
             : r'\d+'),
         _decimalFormatter = FilteringTextInputFormatter.allow(RegExp(
             allowFraction
-                ? '[0-9]+([${(formatter ?? _formatter).symbols.DECIMAL_SEP}])?'
+                ? '[0-9]+(${RegExp.escape((formatter ?? _formatter).symbols.DECIMAL_SEP)})?'
                 : r'\d+'));
 
   @override
   String _formatPattern(String? digits) {
     if (digits == null || digits.isEmpty) return '';
-    num number;
-    if (allowFraction) {
-      String decimalDigits = digits;
-      if (_decimalSeparator != '.') {
-        decimalDigits = digits.replaceFirst(RegExp(_decimalSeparator), '.');
-      }
-      number = double.tryParse(decimalDigits) ?? 0.0;
-    } else {
-      number = int.tryParse(digits) ?? 0;
+    final usedFormatter = formatter ?? _formatter;
+    if (!allowFraction) {
+      return _groupInteger(digits, usedFormatter);
     }
-    final result = (formatter ?? _formatter).format(number);
-    if (allowFraction && digits.endsWith(_decimalSeparator)) {
-      return '$result$_decimalSeparator';
+
+    /// Preserve the exact fraction digits the user typed (including trailing
+    /// zeros) instead of round-tripping through a [double]. Parsing to a double
+    /// would round to the formatter's `maximumFractionDigits` and strip
+    /// trailing zeros, so values like `1.0`, `10.50` or `1.2345` could not be
+    /// entered as typed.
+    final separatorIndex = digits.indexOf(_decimalSeparator);
+    if (separatorIndex < 0) {
+      return _groupInteger(digits, usedFormatter);
     }
-    return result;
+    final integerDigits = digits.substring(0, separatorIndex);
+    final fractionDigits =
+        digits.substring(separatorIndex + 1).replaceAll(RegExp(r'[^0-9]'), '');
+    return '${_groupInteger(integerDigits, usedFormatter)}'
+        '$_decimalSeparator$fractionDigits';
+  }
+
+  /// Groups [integerDigits] using the locale-aware thousands separator.
+  ///
+  /// Falls back to the raw digits when the value is too large to fit in an
+  /// [int], rather than silently collapsing to `0`.
+  String _groupInteger(String integerDigits, NumberFormat usedFormatter) {
+    if (integerDigits.isEmpty) return usedFormatter.format(0);
+    final value = int.tryParse(integerDigits);
+    if (value == null) return integerDigits;
+    return usedFormatter.format(value);
   }
 
   @override
@@ -106,6 +121,9 @@ class CreditCardFormatter extends NumberInputFormatter {
 /// An abstract class extends from [TextInputFormatter] and does numeric filter.
 /// It has an abstract method `_format()` that lets its children override it to
 /// format input displayed on a text field
+///
+/// Each instance keeps internal state (the last processed value), so use a
+/// separate formatter instance for each text field rather than sharing one.
 ///
 abstract class NumberInputFormatter extends TextInputFormatter {
   TextEditingValue? _lastNewValue;

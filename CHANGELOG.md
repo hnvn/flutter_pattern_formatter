@@ -1,3 +1,10 @@
+## 4.2.0
+
+* fix `ThousandsFormatter` with `allowFraction: true` rounding fraction digits (to 3 places) and dropping trailing zeros; the exact fraction digits typed are now preserved (e.g. `1.0`, `10.50`, `1.2345`)
+* fix large integers collapsing to `0`; values too large for `int` now keep their digits
+* strip stray extra decimal separators instead of falling back to `0`
+* escape the locale decimal separator when building internal regexes
+
 ## 4.1.0
 
 * remove `package:flutter/material.dart` dependency from the library; formatters now rely only on `package:flutter/services.dart`
