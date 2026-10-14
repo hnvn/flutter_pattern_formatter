@@ -1,3 +1,8 @@
+## 4.1.0
+
+* remove `package:flutter/material.dart` dependency from the library; formatters now rely only on `package:flutter/services.dart`
+* migrate the example app to the standalone `material_ui` package (Flutter 3.47+)
+
 ## 4.0.1
 
 * remove constraints to version of `intl`

@@ -1,5 +1,4 @@
 import 'package:flutter/services.dart';
-import 'package:flutter/material.dart' show TextField;
 import 'package:intl/intl.dart';
 
 import 'dart:math';
@@ -106,7 +105,7 @@ class CreditCardFormatter extends NumberInputFormatter {
 ///
 /// An abstract class extends from [TextInputFormatter] and does numeric filter.
 /// It has an abstract method `_format()` that lets its children override it to
-/// format input displayed on [TextField]
+/// format input displayed on a text field
 ///
 abstract class NumberInputFormatter extends TextInputFormatter {
   TextEditingValue? _lastNewValue;

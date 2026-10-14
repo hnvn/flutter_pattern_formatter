@@ -1,14 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/material.dart' show TextField;
 import 'dart:math';
 
 const INDEX_NOT_FOUND = -1;
 
 ///
 /// An implementation of [TextInputFormatter] provides a way to input date form
-/// with [TextField], such as dd/MM/yyyy. In order to guide user about input form,
-/// the formatter will provide [TextField] a placeholder --/--/---- as soon as
+/// with a text field, such as dd/MM/yyyy. In order to guide user about input form,
+/// the formatter will provide the text field a placeholder --/--/---- as soon as
 /// user start editing. During editing session, the formatter will replace appropriate
 /// placeholder characters by user's input.
 ///
